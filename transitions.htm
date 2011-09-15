@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang=en>
+<head>
+	<meta charset=utf-8>
+	<title>transition test</title>
+	
+	<style type="text/css" media="screen">
+		* {
+			margin:0px;
+			padding:0px;
+		}
+		body {
+			background:-webkit-linear-gradient(left, #d5d38e, #d5d38e 100px, 
+															#66a27e 100px, #66a27e 200px,
+															#26665f 200px, #26665f 300px, 
+															#2f3a51 300px, #2f3a51 400px, #2f3a51) repeat-x;
+															
+			background:-moz-linear-gradient(left, #d5d38e, #d5d38e 100px, 
+															#66a27e 100px, #66a27e 200px,
+															#26665f 200px, #26665f 300px, 
+															#2f3a51 300px, #2f3a51 400px, #2f3a51) repeat-x;
+			background-color:#000;
+			background-size:400px 10px;
+			font-family: 'Lucida Grande';
+		}
+		
+		a {
+			color:#e6e3df;
+		}
+		
+		#middle {
+			background: #821219 url('images/gallery_background.jpg') center top no-repeat;
+			width:100%;
+			margin: 0px;
+			top:25px;
+			bottom:100px;
+			position:fixed;
+			padding-top:100px;
+		}
+		
+		#gal_container {
+			height:378px;
+			width:962px;
+			margin:0px auto;
+			padding:0px;
+			background-color:#e6e3df;
+			border:10px solid #e6e3df;
+			overflow:hidden;
+			position:relative;
+			
+			box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+			-moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+			-webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+			
+			-webkit-box-shadow: 1px 2px 7px 2px rgba(0, 0, 0, 0.6);
+			-moz-box-shadow: 1px 2px 7px 2px rgba(0, 0, 0, 0.6);
+			box-shadow: 1px 2px 7px 2px rgba(0, 0, 0, 0.6);
+		}
+		
+		#gal_container img {
+			border:1px solid #000;
+			position:absolute;
+			
+			-webkit-transition: opacity 2s, -webkit-transform 1s ease-in-out;
+			-moz-transition: opacity 2s, -webkit-transform 1s ease-in-out;
+			
+			/*important stuff*/
+		
+		}
+		
+		/* SLIDE */
+			#gal_container.slideInitial .incoming {
+				-webkit-transform: translateX(-962px);
+				-moz-transform: translateX(-962px);
+			}
+		
+			#gal_container.slideFinal .incoming {
+				-webkit-transform: translateX(0;);
+				-moz-transform: translateX(0;);
+			}
+		
+			#gal_container.slideFinal .outgoing {
+				-webkit-transform: translateX(962px);						
+				-moz-transform: translateX(962px);						
+			}
+			
+		/* TILE */
+			#gal_container .grid {
+				position:absolute;
+				border:1px solid #000;
+				height:376px;
+				width:960px;
+				overflow:visible;
+			}
+			
+			#gal_container .grid div {
+				position:absolute;
+				width:74px;
+				height:63px;
+				padding:0px;
+				margin:0px;
+			}
+			
+			#gal_container.tileInitial .grid.incoming div {
+				-webkit-transform: translateY(-378px);
+				-moz-transform: translateY(-378px);
+			}
+			
+			@-webkit-keyframes outgoing-tile-drop {
+				0% {
+					opacity:1;
+				}
+				
+				70% {
+					-webkit-transform: translateY(200%);
+					opacity:.3;
+				}
+				
+				100% {
+					-webkit-transform: translateY(220%);
+					opacity:0;
+				}
+			}
+			
+			@-moz-keyframes outgoing-tile-drop {
+				0% {
+					opacity:1;
+				}
+				
+				70% {
+					-moz-transform: translateY(200%);
+					opacity:.3;
+				}
+				
+				100% {
+					-moz-transform: translateY(220%);
+					opacity:0;
+				}
+			}
+			
+			#gal_container.tileFinal .grid.outgoing div {
+				-webkit-animation:outgoing-tile-drop 1.5s ease-out;
+				-webkit-animation-fill-mode:both;
+				-moz-animation:outgoing-tile-drop 1.5s ease-out;
+				-moz-animation-fill-mode:both;
+			}
+			
+			@-webkit-keyframes incoming-tile-drop {
+				0% {
+					-webkit-transform: translateY(-378px);
+					opacity:0;
+				}
+				50% {
+					-webkit-transform: translateY(-378px);
+					opacity:0;
+				}
+				
+				80% {
+					opacity:1;
+				}
+				
+				100% {
+					-webkit-transform: translateY(0%);
+				}
+			}
+			
+			@-moz-keyframes incoming-tile-drop {
+				0% {
+					-moz-transform: translateY(-378px);
+					opacity:0;
+				}
+				50% {
+					-moz-transform: translateY(-378px);
+					opacity:0;
+				}
+				
+				80% {
+					opacity:1;
+				}
+				
+				100% {
+					-moz-transform: translateY(0%);
+				}
+			}
+			
+			#gal_container.tileFinal .grid.incoming div {
+				-webkit-animation:incoming-tile-drop 3s ease-out;
+				-moz-animation:incoming-tile-drop 3s ease-out;
+				-webkit-animation-fill-mode:both;
+				-moz-animation-fill-mode:both;
+			}
+		
+		#links {
+			margin: 20px auto;
+			text-align:center;
+		}
+	</style>
+	
+	<script type="text/javascript" charset="utf-8">
+		NodeList.prototype.forEach = function(callback) {
+			for(var i = 0; i < this.length; i++) {
+				callback(this[i], i, this);
+			}
+		}
+		
+		Element.prototype.addClassName = function(className) {
+			var classes = this.className.split(' ');
+			if(classes.indexOf(className) === -1) {
+				classes.push(className);
+				this.className = classes.join(' ');
+			}
+		}
+		
+		Element.prototype.removeClassName = function(className) {
+			var classes = this.className.split(' ');
+			var pos = classes.indexOf(className);
+			if(pos > -1) {
+				classes.splice(pos, 1);
+				this.className = classes.join(' ');
+			}			
+		}
+	
+		var finishSlide = function(){
+			var nextPos = (currentImage + 1) % images.length;
+			images[currentImage].removeClassName('outgoing');
+			images[nextPos].removeClassName('incoming');
+			container.removeClassName('slideFinal');
+			container.removeChild(images[currentImage]);
+			images[currentImage].removeEventListener('webkitTransitionEnd', finishSlide);
+			images[currentImage].removeEventListener('transitionend', finishSlide);
+			currentImage = nextPos;
+		}
+		
+		var buildGrid = function(img) {
+			var tileSizeX = 74;
+			var tileSizeY = 63;
+			
+			var newContainer = document.createElement('div');
+			newContainer.addClassName('grid');
+			
+			for(var i = 0; i < 13; i++) {
+				for(var j = 0; j < 6; j++){
+					var newTile = document.createElement('div')
+					
+					newTile.style.left = (i*tileSizeX) + 'px';
+					newTile.style.top = (j*tileSizeY) + 'px';
+					
+					newTile.style.backgroundImage = "url(" + img.src + ")";
+					newTile.style.backgroundPosition = (-i*tileSizeX) + 'px ' + (-j*tileSizeY) + 'px';
+					newTile.style.webkitAnimationDelay = Math.random() + 's';
+					newContainer.appendChild(newTile);
+				}
+			}
+			
+			return newContainer;
+		}
+		
+		var cleanUpTile = function() {
+			animations--;
+			if(animations === 0) {
+				container.removeClassName('tileFinal');
+				var nextPos = (currentImage + 1) % images.length;
+				currentImage = nextPos;
+				container.style.overflow = 'hidden';
+				container.appendChild(images[currentImage]);
+				document.querySelectorAll('.grid').forEach(function(element) {
+					container.removeChild(element);
+				});
+			}
+		}
+	
+		var transitions = {
+			slide : function() {
+				var nextPos = (currentImage + 1) % images.length;
+				container.addClassName('slideInitial');
+				images[nextPos].addClassName('incoming');
+				container.appendChild(images[nextPos]);
+				images[currentImage].addClassName('outgoing');
+
+				images[currentImage].addEventListener('webkitTransitionEnd', finishSlide, false);
+				images[currentImage].addEventListener('transitionend', finishSlide, false);
+				
+				setTimeout(function() {
+					container.removeClassName('slideInitial');
+					container.addClassName('slideFinal');
+				}, 0);
+			},
+			tile : function() {
+				container.addClassName('tileInitial');
+				var nextPos = (currentImage + 1) % images.length;
+				outgoingGrid = buildGrid(images[currentImage]);
+				outgoingGrid.addClassName('outgoing');
+				
+				incomingGrid = buildGrid(images[nextPos]);
+				incomingGrid.addClassName('incoming');
+				
+				incomingGrid.addEventListener('webkitAnimationEnd', cleanUpTile, false);
+				animations = 78;
+				
+				container.removeChild(images[currentImage]);
+				container.appendChild(outgoingGrid);
+				container.appendChild(incomingGrid);
+				
+				container.style.overflow = 'visible';
+				
+				setTimeout(function() {
+					container.removeClassName('tileInitial');
+					container.addClassName('tileFinal');
+				}, 0)
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="middle">
+		<div id="gal_container">
+
+		</div>
+		<div id="links">
+			<p><a href='#slide'>slide</a> | <a href='#tile'>tile</a></p>
+		</div>
+	</div>
+	
+	<script type="text/javascript" charset="utf-8">
+		//a couple global vars to maintain state
+		currentImage = 0;
+		images = [];
+		container = document.getElementById('gal_container');
+		
+		images[0] = document.createElement('img');
+		images[0].style.opacity = 0;
+		images[0].onload = function() {
+			container.appendChild(images[0]);
+			setTimeout(function() {images[0].style.opacity = 1}, 0);
+		}
+		images[0].src = 'images/banner1_sample.jpg';
+		
+		//add more images
+		images[1] = document.createElement('img');
+		images[1].src = 'images/banner2_sample.jpg';
+		
+		document.querySelectorAll('a').forEach(function(element) {
+			element.onclick = function() {
+				transitions[element.href.substring(element.href.indexOf('#')+1)]();
+			}
+		})
+	</script>
+</body>
+</html>
